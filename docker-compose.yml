@@ -19,19 +19,19 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=n8n_default"
-      - "traefik.http.routers.icon-site.rule=Host(`www.iconstudio.tech`)"
-      - "traefik.http.routers.icon-site.entrypoints=websecure"
-      - "traefik.http.routers.icon-site.tls.certresolver=mytlschallenge"
-      - "traefik.http.routers.icon-site.service=icon-site"
-      - "traefik.http.routers.icon-apex.rule=Host(`iconstudio.tech`)"
-      - "traefik.http.routers.icon-apex.entrypoints=websecure"
-      - "traefik.http.routers.icon-apex.tls.certresolver=mytlschallenge"
-      - "traefik.http.routers.icon-apex.middlewares=icon-apex-to-www"
-      - "traefik.http.routers.icon-apex.service=icon-site"
-      - "traefik.http.middlewares.icon-apex-to-www.redirectregex.regex=^https://iconstudio\\.tech/(.*)"
-      - "traefik.http.middlewares.icon-apex-to-www.redirectregex.replacement=https://www.iconstudio.tech/$${1}"
-      - "traefik.http.middlewares.icon-apex-to-www.redirectregex.permanent=true"
-      - "traefik.http.services.icon-site.loadbalancer.server.port=80"
+      - "traefik.http.routers.iconweb-www.rule=Host(`www.iconstudio.tech`)"
+      - "traefik.http.routers.iconweb-www.entrypoints=websecure"
+      - "traefik.http.routers.iconweb-www.tls.certresolver=mytlschallenge"
+      - "traefik.http.routers.iconweb-www.service=iconweb"
+      - "traefik.http.routers.iconweb-apex.rule=Host(`iconstudio.tech`)"
+      - "traefik.http.routers.iconweb-apex.entrypoints=websecure"
+      - "traefik.http.routers.iconweb-apex.tls.certresolver=mytlschallenge"
+      - "traefik.http.routers.iconweb-apex.middlewares=iconweb-apex2www"
+      - "traefik.http.routers.iconweb-apex.service=iconweb"
+      - "traefik.http.middlewares.iconweb-apex2www.redirectregex.regex=^https://iconstudio\\.tech/(.*)"
+      - "traefik.http.middlewares.iconweb-apex2www.redirectregex.replacement=https://www.iconstudio.tech/$${1}"
+      - "traefik.http.middlewares.iconweb-apex2www.redirectregex.permanent=true"
+      - "traefik.http.services.iconweb.loadbalancer.server.port=80"
     command:
       - sh
       - -c
@@ -40,7 +40,7 @@ services:
         H=/usr/share/nginx/html
         B="https://raw.githubusercontent.com/ICONSTUDIOEG/icon-website/$$REV"
         rm -rf $$H/* && mkdir -p $$H/assets
-        for f in index.html \
+        for f in index.html robots.txt \
           assets/icon-logo.png \
           assets/ricopeka-poster.jpg \
           assets/ricopeka-intro-720.mp4 \
@@ -59,12 +59,12 @@ services:
           index index.html;
           charset utf-8;
           gzip on;
-          gzip_types text/html text/css application/javascript image/svg+xml;
+          gzip_types text/css application/javascript image/svg+xml;
           add_header X-Content-Type-Options "nosniff" always;
           add_header Referrer-Policy "strict-origin-when-cross-origin" always;
           location = /index.html { add_header Cache-Control "no-cache" always; }
           location /assets/ { add_header Cache-Control "public, max-age=604800" always; }
-          location / { try_files $$uri $$uri/ /index.html; }
+          location / { try_files $$uri $$uri/ =404; }
         }
         CONF
         echo "icon-website $$REV ready"
