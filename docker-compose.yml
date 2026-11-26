@@ -13,7 +13,7 @@ services:
     container_name: icon-website-web
     restart: unless-stopped
     environment:
-      REV: "__REV__"
+      REV: "87f0f32"
     networks:
       - traefik-shared
     labels:
