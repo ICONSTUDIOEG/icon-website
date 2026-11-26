@@ -39,7 +39,7 @@ services:
         set -e
         H=/usr/share/nginx/html
         B="https://raw.githubusercontent.com/ICONSTUDIOEG/icon-website/$$REV"
-        rm -rf $$H/* && mkdir -p $$H/assets
+        rm -rf $$H/* && mkdir -p $$H/assets/clients
         for f in index.html robots.txt \
           assets/icon-logo.png \
           assets/ricopeka-poster.jpg \
@@ -53,7 +53,12 @@ services:
           assets/omar-khairat-poster.jpg \
           assets/omar-khairat-opening-720.mp4 \
           assets/plastic-civilization-poster.jpg \
-          assets/plastic-civilization-720.mp4; do
+          assets/plastic-civilization-720.mp4 \
+          assets/clients/huawei.png \
+          assets/clients/who.png \
+          assets/clients/expo-2020-dubai.png \
+          assets/clients/jeem.png \
+          assets/clients/audio-technology.png; do
           wget -qO "$$H/$$f" "$$B/$$f"
         done
         cat > /etc/nginx/conf.d/default.conf <<'CONF'
