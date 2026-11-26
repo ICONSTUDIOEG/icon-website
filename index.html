@@ -1198,28 +1198,32 @@ form.addEventListener('submit', async e => {
   check('message', (data.message || '').trim().length >= 10, 'A sentence or two about the project helps.');
   if (!ok) { status.className = 'form-status bad'; status.textContent = 'Check the highlighted fields.'; return; }
   delete data.company_site;
-  data.source = 'www.icon-studios.com'; data.sentAt = new Date().toISOString();
+  data.source = location.hostname || 'www.iconstudio.tech'; data.sentAt = new Date().toISOString();
   const endpoint = (form.dataset.endpoint || '').trim();
+  const to = form.dataset.mailto;
   const btn = $('button[type=submit]', form);
+  // Last resort when the endpoint is missing or down: open the visitor's mail app with the brief filled in.
+  const openMailDraft = () => {
+    const subject = encodeURIComponent(`New brief: ${data.type} from ${data.name}`);
+    const body = encodeURIComponent(`${data.message}\n\nName: ${data.name}\nEmail: ${data.email}\nType: ${data.type}`);
+    window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+  };
   btn.disabled = true;
   try {
-    if (endpoint) {
-      status.className = 'form-status'; status.textContent = 'Sending...';
-      const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      status.className = 'form-status ok'; status.textContent = 'Brief received. We will be in touch within two working days.';
-      form.reset();
-    } else {
-      const to = form.dataset.mailto;
-      const text = `New brief: ${data.type} from ${data.name}\n\n${data.message}\n\nName: ${data.name}\nEmail: ${data.email}\nType: ${data.type}`;
-      let copied = false;
-      try { await navigator.clipboard.writeText(text); copied = true; } catch (err2) { copied = false; }
-      status.className = 'form-status ok';
-      status.textContent = copied ? `Brief copied. Paste it into an email to ${to}.` : `Preview mode: email your brief to ${to}.`;
-    }
+    if (!endpoint) throw new Error('no-endpoint');
+    status.className = 'form-status'; status.textContent = 'Sending...';
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 12000);
+    const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data), signal: ctrl.signal });
+    clearTimeout(timer);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    status.className = 'form-status ok'; status.textContent = 'Brief sent. We will reply within two working days.';
+    form.reset();
     supernova();
   } catch (err) {
-    status.className = 'form-status bad'; status.textContent = 'Could not send right now. Please email us directly.';
+    openMailDraft();
+    status.className = 'form-status bad';
+    status.textContent = `We could not send it from the page, so your mail app is opening with the brief ready. You can also write to ${to}.`;
   } finally { btn.disabled = false; }
 });
 
