@@ -257,9 +257,14 @@ section{position:relative;padding:clamp(96px,14vh,160px) var(--pad)}
 /* ==========================================================================
    Clients
    ========================================================================== */
-.clients{display:grid;grid-template-columns:repeat(5,1fr);list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.clients{display:grid;grid-template-columns:repeat(3,1fr);list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
 .client{position:relative;display:grid;place-items:center;min-height:170px;padding:28px 20px 40px;border-left:1px solid var(--line);isolation:isolate;--gx:50%;--gy:50%}
-.client:first-child{border-left:0}
+.client:nth-child(3n+1){border-left:0}
+.client:nth-child(n+4){border-top:1px solid var(--line)}
+.client-word{display:grid;justify-items:center;gap:4px;text-align:center;opacity:.62;transition:opacity .45s,transform .6s var(--ease)}
+.client-word [lang=ar]{font-family:var(--f-ar);font-weight:500;font-size:30px;line-height:1.1;color:#fff}
+.client-word small{font-family:var(--f-display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#fff}
+.client:hover .client-word,.client:focus-visible .client-word{opacity:1;transform:scale(1.06)}
 .client.has-film{cursor:pointer}
 .client.has-film figcaption{color:var(--ion)}
 .client figure{margin:0;display:grid;place-items:center}
@@ -274,7 +279,7 @@ section{position:relative;padding:clamp(96px,14vh,160px) var(--pad)}
   .client{border-left:0;border-top:1px solid var(--line);min-height:140px}
   .client:nth-child(-n+2){border-top:0}
   .client:nth-child(2n){border-left:1px solid var(--line)}
-  .client:last-child{grid-column:span 2}
+  .client-word [lang=ar]{font-size:24px}
   .client img{height:calc(var(--lh,44px) * .88);opacity:.8}
   .client figcaption{opacity:1;transform:none}
 }
@@ -643,6 +648,14 @@ footer{position:relative;z-index:var(--z-content);padding:48px var(--pad) 40px;b
           <button class="work-media" aria-label="Play Plastic Civilization"><div class="work-poster" style="--h:24;background:url(assets/plastic-civilization-poster.jpg) center/cover"></div><div class="work-ui"><div class="row"><span class="rec">REC</span><span class="tc">00:00:00:00</span></div><span class="play">Play reel</span></div></button>
           <div class="work-meta"><div><h3>Plastic Civilization</h3><p lang="ar" dir="rtl">هل نصنع حضارة بلاستيك؟ &middot; 41 s</p></div><span class="tag">Film</span></div>
         </article>
+        <article class="work" id="work-offside" data-work data-hue="210" data-title="أحلام التسلل &middot; Offside Dreams" data-sub="Documentary for Al Jazeera Documentary &middot; Directed by Amir Ahmed &middot; 51 min" data-vimeo="1165768366">
+          <button class="work-media" aria-label="Play Offside Dreams, a documentary for Al Jazeera Documentary"><div class="work-poster" style="--h:210;background:url(assets/vimeo/1165768366.jpg) center/cover"></div><div class="work-ui"><div class="row"><span class="rec">REC</span><span class="tc">00:00:00:00</span></div><span class="play">Play film</span></div></button>
+          <div class="work-meta"><div><h3>Offside Dreams</h3><p><span lang="ar" dir="rtl">أحلام التسلل</span> &middot; Documentary &middot; 51 min</p></div><span class="tag">Al Jazeera</span></div>
+        </article>
+        <article class="work" id="work-bullfighting" data-work data-hue="35" data-title="وداعاً مصارع الثيران &middot; Bullfighting Farewell" data-sub="Documentary for Al Jazeera Documentary &middot; Barcelona, 2011 &middot; 54 min" data-vimeo="91680289">
+          <button class="work-media" aria-label="Play Bullfighting Farewell, a documentary for Al Jazeera Documentary"><div class="work-poster" style="--h:35;background:url(assets/vimeo/91680289.jpg) center/cover"></div><div class="work-ui"><div class="row"><span class="rec">REC</span><span class="tc">00:00:00:00</span></div><span class="play">Play film</span></div></button>
+          <div class="work-meta"><div><h3>Bullfighting Farewell</h3><p><span lang="ar" dir="rtl">وداعاً مصارع الثيران</span> &middot; Documentary &middot; 54 min</p></div><span class="tag">Al Jazeera</span></div>
+        </article>
       </div>
     </div>
   </section>
@@ -655,7 +668,7 @@ footer{position:relative;z-index:var(--z-content);padding:48px var(--pad) 40px;b
           <p class="eyebrow" data-reveal>05 / Clients</p>
           <h2 class="h2" id="clients-title" data-reveal>Stories told<br><em>for those who trust us.</em></h2>
         </div>
-        <p class="lede" data-reveal>Global technology, world health, regional broadcast and a world expo. Different briefs, the same standard of craft.</p>
+        <p class="lede" data-reveal>Global technology, world health, broadcast documentary, regional TV and a world expo. Different briefs, the same standard of craft.</p>
       </div>
       <ul class="clients" data-reveal>
         <li class="client has-film" tabindex="0" role="button" data-client data-vimeo="889186798" data-title="Huawei ICB" data-sub="Short film for Huawei &middot; 3D animation, live action and VFX" aria-label="Huawei: watch the film we made" style="--lh:34px"><figure><img src="assets/clients/huawei.png" alt="Huawei" width="423" height="120" loading="lazy"><figcaption>Huawei &middot; Watch &#9654;</figcaption></figure></li>
@@ -663,6 +676,7 @@ footer{position:relative;z-index:var(--z-content);padding:48px var(--pad) 40px;b
         <li class="client has-film" tabindex="0" role="button" data-client data-vimeo="863500600" data-title="The Prophets &middot; Expo 2020 Dubai" data-sub="3D animated film for the Expo 2020 Dubai exhibition" aria-label="Expo 2020 Dubai: watch the film we made" style="--lh:56px"><figure><img src="assets/clients/expo-2020-dubai.png" alt="Expo 2020 Dubai" width="226" height="120" loading="lazy"><figcaption>Expo 2020 &middot; Watch &#9654;</figcaption></figure></li>
         <li class="client has-film" tabindex="0" role="button" data-client data-vimeo="203602991" data-title="JEEM TV &middot; Season 3" data-sub="Travel and culture episode for JEEM TV &middot; Italy" aria-label="JEEM TV: watch an episode we made" style="--lh:62px"><figure><img src="assets/clients/jeem.png" alt="JEEM TV" width="83" height="120" loading="lazy"><figcaption>JEEM TV &middot; Watch &#9654;</figcaption></figure></li>
         <li class="client" tabindex="0" data-client style="--lh:50px"><figure><img src="assets/clients/audio-technology.png" alt="Audio Technology" width="180" height="120" loading="lazy"><figcaption>Audio Technology</figcaption></figure></li>
+        <li class="client has-film" tabindex="0" role="button" data-client data-vimeo="1165768366" data-title="أحلام التسلل &middot; Offside Dreams" data-sub="Documentary for Al Jazeera Documentary &middot; Directed by Amir Ahmed &middot; 51 min" aria-label="Al Jazeera Documentary: watch Offside Dreams, the documentary we made"><figure><span class="client-word"><span lang="ar" dir="rtl">الجزيرة الوثائقية</span><small>Al Jazeera Documentary</small></span><figcaption>Al Jazeera &middot; Watch &#9654;</figcaption></figure></li>
       </ul>
     </div>
   </section>

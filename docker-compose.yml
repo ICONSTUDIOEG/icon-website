@@ -61,7 +61,9 @@ services:
           assets/clients/audio-technology.png \
           assets/vimeo/1250423912.jpg \
           assets/vimeo/889186798.jpg \
-          assets/vimeo/863500600.jpg; do
+          assets/vimeo/863500600.jpg \
+          assets/vimeo/1165768366.jpg \
+          assets/vimeo/91680289.jpg; do
           wget -qO "$$H/$$f" "$$B/$$f"
         done
         cat > /etc/nginx/conf.d/default.conf <<'CONF'
