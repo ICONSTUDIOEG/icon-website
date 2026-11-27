@@ -1,8 +1,8 @@
 # =====================================================================
 #  www.iconstudio.tech · ICON Studio website
 #
-#  nginx downloads the site from github.com/ICONSTUDIOEG/icon-website
-#  at a pinned commit on every start, then serves it. Routing follows
+#  nginx downloads the repository from github.com/ICONSTUDIOEG/icon-website
+#  at a pinned commit on every start and serves its public folders. Routing follows
 #  plates/grad: shared Traefik network n8n_default, websecure entrypoint,
 #  mytlschallenge certificate resolver. The bare domain redirects to www.
 #  To publish a new version: push to the repo, set REV below, redeploy.
@@ -38,34 +38,14 @@ services:
       - |
         set -e
         H=/usr/share/nginx/html
-        B="https://raw.githubusercontent.com/ICONSTUDIOEG/icon-website/$$REV"
-        rm -rf $$H/* && mkdir -p $$H/assets/clients $$H/assets/vimeo
-        for f in index.html robots.txt \
-          assets/icon-logo.png \
-          assets/ricopeka-poster.jpg \
-          assets/ricopeka-intro-720.mp4 \
-          assets/showreel-hero-poster.jpg \
-          assets/showreel-poetic-poster.jpg \
-          assets/showreel-punchy-poster.jpg \
-          assets/icon-showreel-hero-720.mp4 \
-          assets/icon-showreel-poetic-720.mp4 \
-          assets/icon-showreel-punchy-vertical.mp4 \
-          assets/omar-khairat-poster.jpg \
-          assets/omar-khairat-opening-720.mp4 \
-          assets/plastic-civilization-poster.jpg \
-          assets/plastic-civilization-720.mp4 \
-          assets/clients/huawei.png \
-          assets/clients/who.png \
-          assets/clients/expo-2020-dubai.png \
-          assets/clients/jeem.png \
-          assets/clients/audio-technology.png \
-          assets/vimeo/1250423912.jpg \
-          assets/vimeo/889186798.jpg \
-          assets/vimeo/863500600.jpg \
-          assets/vimeo/1165768366.jpg \
-          assets/vimeo/91680289.jpg; do
-          wget -qO "$$H/$$f" "$$B/$$f"
-        done
+        T=/tmp/site
+        rm -rf $$H/* $$T && mkdir -p $$T
+        # The whole repository at the pinned commit; only public paths are copied to the web root.
+        wget -qO $$T/site.tgz "https://codeload.github.com/ICONSTUDIOEG/icon-website/tar.gz/$$REV"
+        tar -xzf $$T/site.tgz -C $$T
+        S=$$(ls -d $$T/icon-website-*/ | head -n 1)
+        for p in index.html robots.txt assets explorations; do cp -R "$$S$$p" "$$H/"; done
+        rm -rf $$T
         cat > /etc/nginx/conf.d/default.conf <<'CONF'
         server {
           listen 80;
@@ -73,10 +53,11 @@ services:
           index index.html;
           charset utf-8;
           gzip on;
-          gzip_types text/css application/javascript image/svg+xml;
+          gzip_types text/css application/javascript image/svg+xml application/json text/plain;
           add_header X-Content-Type-Options "nosniff" always;
           add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-          location = /index.html { add_header Cache-Control "no-cache" always; }
+          location ~* \.html$ { add_header Cache-Control "no-cache" always; }
+          location ~* ^/explorations/.*\.(json|md)$ { default_type text/plain; add_header Cache-Control "no-cache" always; }
           location /assets/ { add_header Cache-Control "public, max-age=604800" always; }
           location / { try_files $$uri $$uri/ =404; }
         }
