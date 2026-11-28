@@ -1,0 +1,67 @@
+{
+  "name": "ICON website: contact brief to email",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "icon-brief",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "https://www.iconstudio.tech,https://iconstudio.tech"
+        }
+      },
+      "id": "4b0b1d2e-5c1a-4b7e-9d0a-1f2e3a4b5c01",
+      "name": "Brief from website",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "9c6f3e2a-7b4d-4e1f-8a2b-5d6c7e8f9a01"
+    },
+    {
+      "parameters": {
+        "jsCode": "const b = $input.first().json.body || {};\nconst clean = (v, max) => String(v ?? '').trim().slice(0, max);\nif (b.company_site) throw new Error('Rejected: honeypot field was filled');\nconst name = clean(b.name, 120);\nconst email = clean(b.email, 160);\nconst type = clean(b.type, 60) || 'Not specified';\nconst message = clean(b.message, 4000);\nif (name.length < 2) throw new Error('Rejected: name missing');\nif (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$/.test(email)) throw new Error('Rejected: invalid email');\nif (message.length < 10) throw new Error('Rejected: brief too short');\nreturn [{ json: { name, email, type, message, source: clean(b.source, 120), sentAt: clean(b.sentAt, 40) } }];"
+      },
+      "id": "4b0b1d2e-5c1a-4b7e-9d0a-1f2e3a4b5c02",
+      "name": "Validate brief",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [240, 0]
+    },
+    {
+      "parameters": {
+        "fromEmail": "ICON Studio Website <info@icon-studios.com>",
+        "toEmail": "info@icon-studios.com",
+        "subject": "={{ `New brief: ${$json.type} from ${$json.name}` }}",
+        "emailFormat": "text",
+        "text": "={{ `New brief from the website\\n\\nName: ${$json.name}\\nEmail: ${$json.email}\\nProject type: ${$json.type}\\nSent: ${$json.sentAt} from ${$json.source}\\n\\n${$json.message}\\n\\nReply to this email to answer ${$json.name} directly.` }}",
+        "options": {
+          "replyTo": "={{ $json.email }}"
+        }
+      },
+      "id": "4b0b1d2e-5c1a-4b7e-9d0a-1f2e3a4b5c03",
+      "name": "Email the studio",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [480, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { ok: true } }}",
+        "options": {}
+      },
+      "id": "4b0b1d2e-5c1a-4b7e-9d0a-1f2e3a4b5c04",
+      "name": "Tell the website it worked",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [720, 0]
+    }
+  ],
+  "connections": {
+    "Brief from website": { "main": [[{ "node": "Validate brief", "type": "main", "index": 0 }]] },
+    "Validate brief": { "main": [[{ "node": "Email the studio", "type": "main", "index": 0 }]] },
+    "Email the studio": { "main": [[{ "node": "Tell the website it worked", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "active": false
+}

@@ -1,0 +1,91 @@
+# Deploys www.iconstudio.tech on every push to main, and on demand for any commit (rollback).
+# Needs four repository secrets: VPS_HOST, VPS_USER, VPS_SSH_KEY, VPS_PROJECT_DIR.
+# Optional: VPS_PORT (default 22) and VPS_KNOWN_HOSTS (pins the server's SSH host key).
+name: Deploy to iconstudio.tech
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Commit to deploy (leave empty for the latest main). Use an older hash to roll back.
+        required: false
+        default: ""
+
+concurrency:
+  group: deploy-iconstudio-tech
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
+          ref: ${{ inputs.ref || github.sha }}
+
+      - name: Resolve the commit to deploy
+        id: rev
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Check that every asset will be served
+        run: bash .github/scripts/check-assets.sh
+
+      - name: Check deploy secrets
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_PROJECT_DIR: ${{ secrets.VPS_PROJECT_DIR }}
+        run: |
+          missing=""
+          for n in VPS_HOST VPS_USER VPS_SSH_KEY VPS_PROJECT_DIR; do
+            [ -n "${!n}" ] || missing="$missing $n"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Missing repository secrets:$missing. Add them under Settings, Secrets and variables, Actions."
+            exit 1
+          fi
+
+      - name: Deploy over SSH
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+          VPS_PROJECT_DIR: ${{ secrets.VPS_PROJECT_DIR }}
+          REV: ${{ steps.rev.outputs.sha }}
+        run: |
+          PORT="${VPS_PORT:-22}"
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
+          if [ -n "$VPS_KNOWN_HOSTS" ]; then
+            printf '%s\n' "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          else
+            ssh-keyscan -p "$PORT" -H "$VPS_HOST" > ~/.ssh/known_hosts 2>/dev/null
+          fi
+          ssh -i ~/.ssh/deploy_key -p "$PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            "$VPS_USER@$VPS_HOST" \
+            "REV='$REV' DIR='$VPS_PROJECT_DIR' bash -s" < .github/scripts/remote-deploy.sh
+
+      - name: Verify the live site serves this commit
+        env:
+          REV: ${{ steps.rev.outputs.sha }}
+        run: |
+          for i in $(seq 1 12); do
+            if curl -fsSL "https://www.iconstudio.tech/?deploy=$REV" -o live.html && cmp -s live.html index.html; then
+              echo "www.iconstudio.tech is serving $REV"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::www.iconstudio.tech is not serving index.html from $REV"
+          exit 1

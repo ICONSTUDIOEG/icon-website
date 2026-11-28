@@ -1,0 +1,46 @@
+[
+  {
+    "slug": "the-algorithm-has-never-cried",
+    "title": "The algorithm has never cried",
+    "category": "AI & Authorship",
+    "date": "2026-03-06",
+    "author": "Ashraf Ahmed",
+    "lang": "en",
+    "excerpt": "An algorithm can render the physics of a tear falling, but it has never cried. Why AI is a hyper tool for the creative mind, not its author.",
+    "cover": "covers/1171193066.jpg",
+    "minutes": 1
+  },
+  {
+    "slug": "the-prophets-five-screens-at-expo-2020",
+    "title": "The Prophets: one film across five screens at Expo 2020",
+    "category": "Case Study",
+    "date": "2023-09-12",
+    "author": "ICON Studio",
+    "lang": "en",
+    "excerpt": "How each scene of The Prophets was split across five Ultra HD displays for an immersive installation at Expo 2020 Dubai.",
+    "cover": "covers/863500600.jpg",
+    "minutes": 1
+  },
+  {
+    "slug": "spirits-and-ghosts-ai-meets-anis-mansour",
+    "title": "Spirits and Ghosts: AI meets the novels of Anis Mansour",
+    "category": "AI R&D",
+    "date": "2023-07-10",
+    "author": "ICON Studio",
+    "lang": "en",
+    "excerpt": "An AI and 3D animation experiment that brings the spirit world of Anis Mansour's novels to the screen.",
+    "cover": "covers/843820447.jpg",
+    "minutes": 3
+  },
+  {
+    "slug": "animating-arabic-poetry",
+    "title": "Arab's Poems: giving Arabic poetry a visual language",
+    "category": "Development",
+    "date": "2023-06-20",
+    "author": "ICON Studio",
+    "lang": "en",
+    "excerpt": "A 3D animated series in development that shows the forms of Arabic poetry and how they were used: duels, routes, cities and praise.",
+    "cover": "covers/837944106.jpg",
+    "minutes": 4
+  }
+]

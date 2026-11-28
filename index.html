@@ -247,12 +247,69 @@ section{position:relative;padding:clamp(96px,14vh,160px) var(--pad)}
 .reel{border:0;padding:0;background:transparent;width:min(1100px,94vw);max-width:none;color:var(--text)}
 .reel::backdrop{background:rgba(3,3,5,.86);backdrop-filter:blur(10px)}
 .reel-frame{position:relative;aspect-ratio:16/9;border-radius:16px;overflow:hidden;border:1px solid var(--line-2);background:#000;box-shadow:0 40px 120px -40px rgba(0,240,255,.35)}
-.reel-frame canvas,.reel-frame video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.reel-frame canvas,.reel-frame video,.reel-frame iframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0}
 .reel-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 4px 0}
 .reel-bar h3{margin:0;font-family:var(--f-display);font-size:22px;font-weight:600}
 .reel-bar p{margin:2px 0 0;color:var(--muted);font-size:14px}
 .reel-close{width:46px;height:46px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;font-size:20px;flex:none}
 .reel-close:hover{border-color:var(--ion)}
+
+/* ==========================================================================
+   Clients
+   ========================================================================== */
+.clients{display:grid;grid-template-columns:repeat(3,1fr);list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.client{position:relative;display:grid;place-items:center;min-height:170px;padding:28px 20px 40px;border-left:1px solid var(--line);isolation:isolate;--gx:50%;--gy:50%}
+.client:nth-child(3n+1){border-left:0}
+.client:nth-child(n+4){border-top:1px solid var(--line)}
+.client-word{display:grid;justify-items:center;gap:4px;text-align:center;opacity:.62;transition:opacity .45s,transform .6s var(--ease)}
+.client-word [lang=ar]{font-family:var(--f-ar);font-weight:500;font-size:30px;line-height:1.1;color:#fff}
+.client-word small{font-family:var(--f-display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#fff}
+.client:hover .client-word,.client:focus-visible .client-word{opacity:1;transform:scale(1.06)}
+.client.has-film{cursor:pointer}
+.client.has-film figcaption{color:var(--ion)}
+.client figure{margin:0;display:grid;place-items:center}
+.client::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(220px circle at var(--gx) var(--gy),rgba(0,240,255,.13),transparent 65%);opacity:0;transition:opacity .45s}
+.client img{height:calc(var(--lh,44px) * 1.22);width:auto;max-width:100%;opacity:.62;transition:opacity .45s,transform .6s var(--ease),filter .45s}
+.client figcaption{position:absolute;left:8px;right:8px;bottom:14px;text-align:center;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);opacity:0;transform:translateY(6px);transition:opacity .45s,transform .45s var(--ease)}
+.client:hover::before,.client:focus-visible::before{opacity:1}
+.client:hover img,.client:focus-visible img{opacity:1;transform:scale(1.06);filter:drop-shadow(0 0 16px rgba(0,240,255,.35))}
+.client:hover figcaption,.client:focus-visible figcaption{opacity:1;transform:none}
+@media (max-width:860px){
+  .clients{grid-template-columns:repeat(2,1fr)}
+  .client{border-left:0;border-top:1px solid var(--line);min-height:140px}
+  .client:nth-child(-n+2){border-top:0}
+  .client:nth-child(2n){border-left:1px solid var(--line)}
+  .client-word [lang=ar]{font-size:24px}
+  .client img{height:calc(var(--lh,44px) * .88);opacity:.8}
+  .client figcaption{opacity:1;transform:none}
+}
+
+/* ==========================================================================
+   Testimonials: one quote at a time, all stacked in one grid cell so the height never jumps
+   ========================================================================== */
+.quotes{display:grid;gap:28px}
+.quotes-stage{display:grid;touch-action:pan-y}
+.quote{grid-area:1 / 1;margin:0;display:grid;gap:26px;align-content:start;opacity:0;visibility:hidden;transition:opacity .5s,visibility .5s}
+.quote.is-active{opacity:1;visibility:visible}
+.quote blockquote{margin:0;position:relative;padding-top:54px;max-width:62ch}
+.quote blockquote::before{content:"\201C";position:absolute;top:-22px;left:-6px;font-family:var(--f-display);font-weight:700;font-size:120px;line-height:1;background:linear-gradient(160deg,var(--gold),var(--copper));-webkit-background-clip:text;background-clip:text;color:transparent}
+.quote blockquote p{margin:0;font-family:var(--f-display);font-weight:400;font-size:clamp(19px,2vw,27px);line-height:1.45;letter-spacing:-.01em;color:#E4E8EF;text-wrap:pretty}
+.quote figcaption{display:flex;align-items:center;gap:14px}
+.q-mono{width:46px;height:46px;flex:none;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:.04em;color:#00161a;background:linear-gradient(135deg,var(--ion),var(--brand-blue))}
+.q-name{display:block;font-family:var(--f-display);font-weight:600;font-size:17px}
+.q-role{display:block;color:var(--muted);font-size:14px}
+.quotes-nav{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding-top:22px;border-top:1px solid var(--line)}
+.q-btn{width:46px;height:46px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;font-size:18px;transition:border-color .3s,color .3s}
+.q-btn:hover{border-color:var(--ion);color:var(--ion)}
+.q-count{font-family:var(--f-mono);font-size:12px;letter-spacing:.2em;color:var(--muted);min-width:64px;text-align:center;font-variant-numeric:tabular-nums}
+.q-src{margin-left:auto;font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.q-src:hover{color:var(--ion)}
+@media (max-width:640px){.q-src{margin-left:0;width:100%}}
+@media (min-width:1000px){
+  .quote{grid-template-columns:minmax(0,1fr) 300px;column-gap:72px;align-items:end}
+  .quote blockquote p{font-size:clamp(18px,1.6vw,24px)}
+  .quote figcaption{padding:0 0 6px 24px;border-left:1px solid var(--line-2)}
+}
 
 /* ==========================================================================
    Contact and footer
@@ -262,6 +319,12 @@ section{position:relative;padding:clamp(96px,14vh,160px) var(--pad)}
 .contact-list li{display:flex;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);font-size:15px}
 .contact-list span{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);padding-top:3px}
 .contact-list a:hover{color:var(--ion)}
+.contact-list li.follow{align-items:center;flex-wrap:wrap}
+.socials{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+.socials a{padding:7px 13px;border-radius:999px;border:1px solid var(--line-2);font-size:13px;color:var(--text);transition:border-color .3s,color .3s,background .3s}
+.socials a:hover,.socials a:focus-visible{border-color:var(--ion);color:var(--ion);background:rgba(0,240,255,.06)}
+.socials-foot a{padding:5px 11px;font-size:12px;color:var(--muted)}
+@media (max-width:640px){.socials{justify-content:flex-start}}
 .form{padding:clamp(22px,3vw,36px);display:grid;gap:16px}
 .field{display:grid;gap:7px}
 .field label{font-family:var(--f-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
@@ -405,6 +468,7 @@ footer{position:relative;z-index:var(--z-content);padding:48px var(--pad) 40px;b
     <li><a href="#pipeline" data-nav>AI Pipeline</a></li>
     <li><a href="#lab" data-nav>Hydrogen Lab</a></li>
     <li><a href="#works" data-nav>Works</a></li>
+    <li><a href="explorations/">Explorations</a></li>
     <li><a href="#contact" data-nav>Contact</a></li>
   </ul>
   <div class="nav-right">
@@ -546,20 +610,32 @@ footer{position:relative;z-index:var(--z-content);padding:48px var(--pad) 40px;b
           <p class="eyebrow" data-reveal>04 / Selected Works</p>
           <h2 class="h2" id="works-title" data-reveal>Frames that<br><em>hold their charge.</em></h2>
         </div>
-        <p class="lede" data-reveal>Series, commercials, product films and sound. Open any frame for a preview. Each tile accepts a real reel through its <span class="mono">data-video</span> attribute.</p>
+        <p class="lede" data-reveal>Series, client films, documentaries and showreels, from Huawei to Expo 2020 Dubai. Open any frame to watch.</p>
       </div>
       <div class="works">
+        <article class="work" id="work-offside" data-work data-hue="210" data-title="أحلام التسلل &middot; Offside Dreams" data-sub="Documentary for Al Jazeera Documentary &middot; Directed by Amir Ahmed &middot; 51 min" data-vimeo="1165768366">
+          <button class="work-media" aria-label="Play Offside Dreams, a documentary for Al Jazeera Documentary"><div class="work-poster" style="--h:210;background:url(assets/vimeo/1165768366.jpg) center/cover"></div><div class="work-ui"><div class="row"><span class="rec">REC</span><span class="tc">00:00:00:00</span></div><span class="play">Play film</span></div></button>
+          <div class="work-meta"><div><h3>Offside Dreams</h3><p><span lang="ar" dir="rtl">أحلام التسلل</span> &middot; Documentary &middot; 51 min</p></div><span class="tag">Al Jazeera</span></div>
+        </article>
+        <article class="work" id="work-bullfighting" data-work data-hue="35" data-title="وداعاً مصارع الثيران &middot; Bullfighting Farewell" data-sub="Documentary for Al Jazeera Documentary &middot; Barcelona, 2011 &middot; 54 min" data-vimeo="91680289">
+          <button class="work-media" aria-label="Play Bullfighting Farewell, a documentary for Al Jazeera Documentary"><div class="work-poster" style="--h:35;background:url(assets/vimeo/91680289.jpg) center/cover"></div><div class="work-ui"><div class="row"><span class="rec">REC</span><span class="tc">00:00:00:00</span></div><span class="play">Play film</span></div></button>
+          <div class="work-meta"><div><h3>Bullfighting Farewell</h3><p><span lang="ar" dir="rtl">وداعاً مصارع الثيران</span> &middot; Documentary &middot; 54 min</p></div><span class="tag">Al Jazeera</span></div>
+        </article>
         <article class="work" data-work data-hue="188" data-title="RICOPEKA" data-sub="AI-hybrid animated Arabic series &middot; Pilot" data-video="assets/ricopeka-intro-720.mp4">
           <button class="work-media" aria-label="Preview RICOPEKA"><div class="work-poster" style="--h:188;background:url(assets/ricopeka-poster.jpg) center/cover"></div><div class="work-ui"><div class="row"><span class="rec">REC</span><span class="tc">00:00:00:00</span></div><span class="play">Play reel</span></div></button>
           <div class="work-meta"><div><h3>RICOPEKA</h3><p>AI-hybrid animated Arabic series</p></div><span class="tag">Series</span></div>
         </article>
-        <article class="work" data-work data-hue="38" data-title="Inline Four" data-sub="Automotive lubricant TVC &middot; Engine and oil-flow simulation" data-video="">
-          <button class="work-media" aria-label="Preview Inline Four"><div class="work-poster" style="--h:38"></div><div class="work-ui"><div class="row"><span class="rec">REC</span><span class="tc">00:00:00:00</span></div><span class="play">Play reel</span></div></button>
-          <div class="work-meta"><div><h3>Inline Four</h3><p>Engine and oil-flow simulation TVC</p></div><span class="tag">Commercial</span></div>
+        <article class="work" data-work data-hue="30" data-title="The Pigment and the Iron" data-sub="Short film by Ashraf Ahmed &middot; Occupied France, 1944 &middot; 4K" data-vimeo="1250423912">
+          <button class="work-media" aria-label="Play The Pigment and the Iron"><div class="work-poster" style="--h:30;background:url(assets/vimeo/1250423912.jpg) center/cover"></div><div class="work-ui"><div class="row"><span class="rec">REC</span><span class="tc">00:00:00:00</span></div><span class="play">Play film</span></div></button>
+          <div class="work-meta"><div><h3>The Pigment and the Iron</h3><p>Short film &middot; 3 min &middot; 4K</p></div><span class="tag">Film</span></div>
         </article>
-        <article class="work" data-work data-hue="220" data-title="RIWAYA" data-sub="Animation operating system for Arab studios &middot; Product film" data-video="">
-          <button class="work-media" aria-label="Preview RIWAYA"><div class="work-poster" style="--h:220"></div><div class="work-ui"><div class="row"><span class="rec">REC</span><span class="tc">00:00:00:00</span></div><span class="play">Play reel</span></div></button>
-          <div class="work-meta"><div><h3>RIWAYA</h3><p>Animation OS for Arab studios</p></div><span class="tag">Product Film</span></div>
+        <article class="work" id="work-huawei" data-work data-hue="355" data-title="Huawei ICB" data-sub="Short film for Huawei &middot; 3D animation, live action and VFX" data-vimeo="889186798">
+          <button class="work-media" aria-label="Play the Huawei ICB short film"><div class="work-poster" style="--h:355;background:url(assets/vimeo/889186798.jpg) center/cover"></div><div class="work-ui"><div class="row"><span class="rec">REC</span><span class="tc">00:00:00:00</span></div><span class="play">Play film</span></div></button>
+          <div class="work-meta"><div><h3>Huawei ICB</h3><p>Client film &middot; 3D and live action &middot; 3:36</p></div><span class="tag">Huawei</span></div>
+        </article>
+        <article class="work" id="work-expo" data-work data-hue="40" data-title="The Prophets &middot; Expo 2020 Dubai" data-sub="3D animated film for the Expo 2020 Dubai exhibition" data-vimeo="863500600">
+          <button class="work-media" aria-label="Play The Prophets, made for Expo 2020 Dubai"><div class="work-poster" style="--h:40;background:url(assets/vimeo/863500600.jpg) center/cover"></div><div class="work-ui"><div class="row"><span class="rec">REC</span><span class="tc">00:00:00:00</span></div><span class="play">Play film</span></div></button>
+          <div class="work-meta"><div><h3>The Prophets</h3><p>Expo 2020 Dubai &middot; 3D animation &middot; 4:33</p></div><span class="tag">Expo 2020</span></div>
         </article>
         <article class="work" data-work data-hue="38" data-title="Showreel &middot; Arabic Cut" data-sub="الشريط التعريفي &middot; Poetic cut with Arabic-first titles" data-video="assets/icon-showreel-poetic-720.mp4">
           <button class="work-media" aria-label="Play the Arabic cut of the ICON showreel"><div class="work-poster" style="--h:38;background:url(assets/showreel-poetic-poster.jpg) center/cover"></div><div class="work-ui"><div class="row"><span class="rec">REC</span><span class="tc">00:00:00:00</span></div><span class="play">Play reel</span></div></button>
@@ -585,11 +661,67 @@ footer{position:relative;z-index:var(--z-content);padding:48px var(--pad) 40px;b
     </div>
   </section>
 
+  <!-- CLIENTS: logos as white silhouettes, full brightness and a field pull on hover -->
+  <section id="clients" aria-labelledby="clients-title">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-reveal>05 / Clients</p>
+          <h2 class="h2" id="clients-title" data-reveal>Stories told<br><em>for those who trust us.</em></h2>
+        </div>
+        <p class="lede" data-reveal>Global technology, world health, broadcast documentary, regional TV and a world expo. Different briefs, the same standard of craft.</p>
+      </div>
+      <ul class="clients" data-reveal>
+        <li class="client has-film" tabindex="0" role="button" data-client data-vimeo="889186798" data-title="Huawei ICB" data-sub="Short film for Huawei &middot; 3D animation, live action and VFX" aria-label="Huawei: watch the film we made" style="--lh:34px"><figure><img src="assets/clients/huawei.png" alt="Huawei" width="423" height="120" loading="lazy"><figcaption>Huawei &middot; Watch &#9654;</figcaption></figure></li>
+        <li class="client" tabindex="0" data-client style="--lh:38px"><figure><img src="assets/clients/who.png" alt="World Health Organization" width="370" height="120" loading="lazy"><figcaption>World Health Organization</figcaption></figure></li>
+        <li class="client has-film" tabindex="0" role="button" data-client data-vimeo="863500600" data-title="The Prophets &middot; Expo 2020 Dubai" data-sub="3D animated film for the Expo 2020 Dubai exhibition" aria-label="Expo 2020 Dubai: watch the film we made" style="--lh:56px"><figure><img src="assets/clients/expo-2020-dubai.png" alt="Expo 2020 Dubai" width="226" height="120" loading="lazy"><figcaption>Expo 2020 &middot; Watch &#9654;</figcaption></figure></li>
+        <li class="client has-film" tabindex="0" role="button" data-client data-vimeo="203602991" data-title="JEEM TV &middot; Season 3" data-sub="Travel and culture episode for JEEM TV &middot; Italy" aria-label="JEEM TV: watch an episode we made" style="--lh:62px"><figure><img src="assets/clients/jeem.png" alt="JEEM TV" width="83" height="120" loading="lazy"><figcaption>JEEM TV &middot; Watch &#9654;</figcaption></figure></li>
+        <li class="client" tabindex="0" data-client style="--lh:50px"><figure><img src="assets/clients/audio-technology.png" alt="Audio Technology" width="180" height="120" loading="lazy"><figcaption>Audio Technology</figcaption></figure></li>
+        <li class="client has-film" tabindex="0" role="button" data-client data-vimeo="1165768366" data-title="أحلام التسلل &middot; Offside Dreams" data-sub="Documentary for Al Jazeera Documentary &middot; Directed by Amir Ahmed &middot; 51 min" aria-label="Al Jazeera Documentary: watch Offside Dreams, the documentary we made"><figure><span class="client-word"><span lang="ar" dir="rtl">الجزيرة الوثائقية</span><small>Al Jazeera Documentary</small></span><figcaption>Al Jazeera &middot; Watch &#9654;</figcaption></figure></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS: quoted verbatim from LinkedIn recommendations, as published on icon-studios.com -->
+  <section id="testimonials" aria-labelledby="testimonials-title">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-reveal>06 / Testimonials</p>
+          <h2 class="h2" id="testimonials-title" data-reveal>In their<br><em>own words.</em></h2>
+        </div>
+        <p class="lede" data-reveal>Recommendations from producers and creatives who worked with us, quoted exactly as they wrote them.</p>
+      </div>
+      <div class="quotes" data-quotes data-reveal>
+        <div class="quotes-stage" aria-live="polite">
+          <figure class="quote is-active" data-quote>
+            <blockquote><p>There are many animated video production companies out there, and most companies know their way around the art however ICon Studio has a highly experienced and professional team of script writers, designers, animators, voiceover artists and project managers which gives quality videos as output. They have worked for many clients including Jeem TV in which I was The Production Manager, ICon delivered high-quality products and exceptional service with every order!</p></blockquote>
+            <figcaption><span class="q-mono" aria-hidden="true">NK</span><span><span class="q-name">Nasser Kaabour</span><span class="q-role">Executive Producer &middot; formerly Production Manager, Jeem TV</span></span></figcaption>
+          </figure>
+          <figure class="quote" data-quote aria-hidden="true">
+            <blockquote><p>I've witnessed Dr. Ashraf Ahmed's exceptional capabilities in video and animation production. During my tenure at Jeem TV, he consistently impressed me with his adeptness in preparing and delivering engaging reports, with the ability to do so from various cities worldwide. Similarly, when I hired his services at Euronews to film a mini documentary, he and his team delivered outstanding results. Overall, his commitment to excellence and unmatched expertise make him an invaluable asset in the industry.</p></blockquote>
+            <figcaption><span class="q-mono" aria-hidden="true">ME</span><span><span class="q-name">Mohamed Elashi</span><span class="q-role">Sr. Producer &middot; Euronews Doha</span></span></figcaption>
+          </figure>
+          <figure class="quote" data-quote aria-hidden="true">
+            <blockquote><p>One of the leaders of Graphics design in Egypt, He is a teacher for my generation, His studio is an icon as its name for the graphics design and media production....Looking to enjoy your next work, Good Luck.</p></blockquote>
+            <figcaption><span class="q-mono" aria-hidden="true">AH</span><span><span class="q-name">Ahmed Hammam</span><span class="q-role">Art Director &middot; H line studio</span></span></figcaption>
+          </figure>
+        </div>
+        <div class="quotes-nav">
+          <button class="q-btn" type="button" data-q="prev" aria-label="Previous testimonial">&larr;</button>
+          <span class="q-count" aria-hidden="true">01 / 03</span>
+          <button class="q-btn" type="button" data-q="next" aria-label="Next testimonial">&rarr;</button>
+          <a class="q-src" href="https://www.linkedin.com/in/ashrafahmed1998/" target="_blank" rel="noopener">Source: LinkedIn recommendations &nearr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CONTACT: formation 5, portal ring -->
   <section id="contact" data-formation="5" aria-labelledby="contact-title">
     <div class="wrap contact">
       <div>
-        <p class="eyebrow" data-reveal>05 / Start a Project</p>
+        <p class="eyebrow" data-reveal>07 / Start a Project</p>
         <h2 class="h2" id="contact-title" data-reveal>Bring the story.<br><em>We bring the physics.</em></h2>
         <p class="lede" data-reveal>Series, commercials, films, sound or an AI pipeline for your own studio. Tell us what you are building and we will reply within two working days.</p>
         <ul class="contact-list" data-reveal>
@@ -597,9 +729,19 @@ footer{position:relative;z-index:var(--z-content);padding:48px var(--pad) 40px;b
           <li><span>Email</span><a href="mailto:info@icon-studios.com" class="js-mail">info@icon-studios.com</a></li>
           <li><span>Studio</span><b style="font-weight:400">Cairo, Egypt</b></li>
           <li><span>Since</span><b style="font-weight:400">1998</b></li>
+          <li class="follow"><span>Follow</span>
+            <nav class="socials" aria-label="ICON Studio on social media">
+              <a href="https://www.facebook.com/iconegypt" target="_blank" rel="noopener">Facebook</a>
+              <a href="https://www.youtube.com/@iconEgypt" target="_blank" rel="noopener">YouTube</a>
+              <a href="https://vimeo.com/iconstudio98" target="_blank" rel="noopener">Vimeo</a>
+              <a href="https://www.linkedin.com/in/iconstudio1998/" target="_blank" rel="noopener">LinkedIn</a>
+              <a href="https://x.com/iConStudioCo" target="_blank" rel="noopener">X</a>
+              <a href="https://wa.me/201019931866" target="_blank" rel="noopener">WhatsApp</a>
+            </nav>
+          </li>
         </ul>
       </div>
-      <form class="form glass" id="contact-form" data-endpoint="" data-mailto="info@icon-studios.com" novalidate data-reveal>
+      <form class="form glass" id="contact-form" data-endpoint="https://icon98.app.n8n.cloud/webhook/icon-brief" data-mailto="info@icon-studios.com" novalidate data-reveal>
         <div class="row2">
           <div class="field"><label for="f-name">Name</label><input id="f-name" name="name" autocomplete="name" required maxlength="120"><span class="err" aria-live="polite"></span></div>
           <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" required maxlength="160"><span class="err" aria-live="polite"></span></div>
@@ -629,6 +771,15 @@ footer{position:relative;z-index:var(--z-content);padding:48px var(--pad) 40px;b
   <div class="foot-big" aria-hidden="true">ICON STUDIO</div>
   <div class="foot">
     <span>&copy; <span class="js-year">2026</span> ICON Studio. Est. 1998.</span>
+    <a href="explorations/" class="foot-link mono">Explorations</a>
+    <nav class="socials socials-foot" aria-label="ICON Studio on social media">
+      <a href="https://www.facebook.com/iconegypt" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://www.youtube.com/@iconEgypt" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://vimeo.com/iconstudio98" target="_blank" rel="noopener">Vimeo</a>
+      <a href="https://www.linkedin.com/in/iconstudio1998/" target="_blank" rel="noopener">LinkedIn</a>
+              <a href="https://x.com/iConStudioCo" target="_blank" rel="noopener">X</a>
+      <a href="https://wa.me/201019931866" target="_blank" rel="noopener">WhatsApp</a>
+    </nav>
     <button type="button" class="foot-link mono" data-intro="replay">Replay intro</button>
     <a href="https://www.icon-studios.com">www.icon-studios.com</a>
   </div>
@@ -705,7 +856,7 @@ document.querySelectorAll('.js-year').forEach(n => n.textContent = new Date().ge
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
-const INTERACTIVE = 'a,button,input,textarea,select,label,summary,[data-card],[data-step],.hud,.nav,dialog';
+const INTERACTIVE = 'a,button,input,textarea,select,label,summary,[data-card],[data-step],[data-client],.hud,.nav,dialog';
 
 /* ==========================================================================
    1. Pointer input (window level, so the canvas never blocks the UI)
@@ -913,6 +1064,53 @@ $$('[data-card]').forEach(card => {
   card.addEventListener('blur', leave);
   addEventListener('scroll', () => { if (S.attractor.strength > 0.01 && card.matches(':hover')) updateCenter(); }, { passive: true });
 });
+$$('[data-client]').forEach(cell => {
+  const center = () => { const r = cell.getBoundingClientRect(); S.attractor.x = r.left + r.width / 2; S.attractor.y = r.top + r.height / 2; };
+  cell.addEventListener('pointermove', e => {
+    const r = cell.getBoundingClientRect();
+    cell.style.setProperty('--gx', (e.clientX - r.left) + 'px'); cell.style.setProperty('--gy', (e.clientY - r.top) + 'px');
+  });
+  const on = () => { center(); if (hasGSAP) gsap.to(S.attractor, { strength: 0.8, duration: 0.6, ease: 'power2.out', overwrite: true }); };
+  const off = () => { if (hasGSAP) gsap.to(S.attractor, { strength: 0, duration: 0.9, ease: 'power2.out', overwrite: true }); };
+  cell.addEventListener('pointerenter', on); cell.addEventListener('focus', on);
+  cell.addEventListener('pointerleave', off); cell.addEventListener('blur', off);
+  if (cell.dataset.vimeo) {
+    cell.addEventListener('click', () => openReel(cell));
+    cell.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openReel(cell); } });
+  }
+});
+const qWrap = $('[data-quotes]');
+if (qWrap) {
+  const quotes = $$('[data-quote]', qWrap), qCount = $('.q-count', qWrap);
+  let qi = 0;
+  const showQuote = n => {
+    const prev = quotes[qi];
+    qi = (n + quotes.length) % quotes.length;
+    const next = quotes[qi];
+    if (prev !== next) {
+      prev.classList.remove('is-active'); prev.setAttribute('aria-hidden', 'true');
+      next.classList.add('is-active'); next.removeAttribute('aria-hidden');
+      if (hasGSAP && !S.reduced) gsap.fromTo(next, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7, ease: 'expo.out', clearProps: 'opacity,transform' });
+    }
+    qCount.textContent = `${String(qi + 1).padStart(2, '0')} / ${String(quotes.length).padStart(2, '0')}`;
+  };
+  qWrap.addEventListener('click', e => {
+    const b = e.target.closest('[data-q]'); if (!b) return;
+    showQuote(qi + (b.dataset.q === 'next' ? 1 : -1));
+  });
+  qWrap.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') showQuote(qi + 1);
+    else if (e.key === 'ArrowLeft') showQuote(qi - 1);
+  });
+  let swipeX = null;
+  const stageEl = $('.quotes-stage', qWrap);
+  stageEl.addEventListener('pointerdown', e => { swipeX = e.clientX; });
+  stageEl.addEventListener('pointerup', e => {
+    if (swipeX === null) return;
+    const dx = e.clientX - swipeX; swipeX = null;
+    if (Math.abs(dx) > 50) showQuote(qi + (dx < 0 ? 1 : -1));
+  });
+}
 $$('[data-step]').forEach(step => {
   if (!hasGSAP) return;
   const on = () => gsap.to(S, { signalBoost: 3.4, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
@@ -964,8 +1162,18 @@ function openReel(w) {
   $('#reel-sub').textContent = w.dataset.sub;
   const src = (w.dataset.video || '').trim();
   const frame = $('.reel-frame', reelDlg);
-  if (reelVideo) { reelVideo.pause(); reelVideo.remove(); reelVideo = null; }
-  if (src) {
+  if (reelVideo) { reelVideo.pause && reelVideo.pause(); reelVideo.remove(); reelVideo = null; }
+  const vimeoId = (w.dataset.vimeo || '').replace(/\D/g, '');
+  if (vimeoId) {
+    reelVideo = document.createElement('iframe');
+    reelVideo.src = `https://player.vimeo.com/video/${vimeoId}?autoplay=1&title=0&byline=0&portrait=0&dnt=1`;
+    reelVideo.allow = 'autoplay; fullscreen; picture-in-picture';
+    reelVideo.allowFullscreen = true;
+    reelVideo.title = w.dataset.title;
+    frame.appendChild(reelVideo);
+    reelCanvas.style.display = 'none';
+    S.reel = null;
+  } else if (src) {
     reelVideo = document.createElement('video');
     Object.assign(reelVideo, { src, controls: true, autoplay: true, playsInline: true });
     if (w.dataset.aspect === '9:16') { reelVideo.style.objectFit = 'contain'; reelVideo.style.background = '#000'; }
@@ -980,10 +1188,10 @@ function openReel(w) {
 }
 function closeReel() {
   S.reel = null;
-  if (reelVideo) { reelVideo.pause(); reelVideo.remove(); reelVideo = null; }
+  if (reelVideo) { reelVideo.pause && reelVideo.pause(); reelVideo.remove(); reelVideo = null; }
   if (reelDlg.open) reelDlg.close();
 }
-reelDlg.addEventListener('close', () => { S.reel = null; if (reelVideo) { reelVideo.pause(); reelVideo.remove(); reelVideo = null; } });
+reelDlg.addEventListener('close', () => { S.reel = null; if (reelVideo) { reelVideo.pause && reelVideo.pause(); reelVideo.remove(); reelVideo = null; } });
 reelDlg.addEventListener('click', e => { if (e.target === reelDlg) closeReel(); });
 document.querySelectorAll('[data-open-showreel]').forEach(b => b.addEventListener('click', () => { const w = document.getElementById('work-showreel'); if (w) openReel(w); }));
 
@@ -1050,28 +1258,32 @@ form.addEventListener('submit', async e => {
   check('message', (data.message || '').trim().length >= 10, 'A sentence or two about the project helps.');
   if (!ok) { status.className = 'form-status bad'; status.textContent = 'Check the highlighted fields.'; return; }
   delete data.company_site;
-  data.source = 'www.icon-studios.com'; data.sentAt = new Date().toISOString();
+  data.source = location.hostname || 'www.iconstudio.tech'; data.sentAt = new Date().toISOString();
   const endpoint = (form.dataset.endpoint || '').trim();
+  const to = form.dataset.mailto;
   const btn = $('button[type=submit]', form);
+  // Last resort when the endpoint is missing or down: open the visitor's mail app with the brief filled in.
+  const openMailDraft = () => {
+    const subject = encodeURIComponent(`New brief: ${data.type} from ${data.name}`);
+    const body = encodeURIComponent(`${data.message}\n\nName: ${data.name}\nEmail: ${data.email}\nType: ${data.type}`);
+    window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+  };
   btn.disabled = true;
   try {
-    if (endpoint) {
-      status.className = 'form-status'; status.textContent = 'Sending...';
-      const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      status.className = 'form-status ok'; status.textContent = 'Brief received. We will be in touch within two working days.';
-      form.reset();
-    } else {
-      const to = form.dataset.mailto;
-      const text = `New brief: ${data.type} from ${data.name}\n\n${data.message}\n\nName: ${data.name}\nEmail: ${data.email}\nType: ${data.type}`;
-      let copied = false;
-      try { await navigator.clipboard.writeText(text); copied = true; } catch (err2) { copied = false; }
-      status.className = 'form-status ok';
-      status.textContent = copied ? `Brief copied. Paste it into an email to ${to}.` : `Preview mode: email your brief to ${to}.`;
-    }
+    if (!endpoint) throw new Error('no-endpoint');
+    status.className = 'form-status'; status.textContent = 'Sending...';
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 12000);
+    const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data), signal: ctrl.signal });
+    clearTimeout(timer);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    status.className = 'form-status ok'; status.textContent = 'Brief sent. We will reply within two working days.';
+    form.reset();
     supernova();
   } catch (err) {
-    status.className = 'form-status bad'; status.textContent = 'Could not send right now. Please email us directly.';
+    openMailDraft();
+    status.className = 'form-status bad';
+    status.textContent = `We could not send it from the page, so your mail app is opening with the brief ready. You can also write to ${to}.`;
   } finally { btn.disabled = false; }
 });
 

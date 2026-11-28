@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Explorations | ICON Studio</title>
+<meta name="description" content="Research, experiments and case studies from ICON Studio and Dr. Ashraf Ahmed: cinema, animation, sound and creative AI.">
+<meta name="theme-color" content="#050507">
+<meta property="og:title" content="Explorations | ICON Studio">
+<meta property="og:description" content="Research, experiments and case studies from ICON Studio and Dr. Ashraf Ahmed.">
+<meta property="og:image" content="https://www.iconstudio.tech/explorations/covers/1171193066.jpg">
+<link rel="icon" type="image/png" href="../assets/icon-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="explore.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="../" aria-label="ICON Studio home"><img src="../assets/icon-logo.png" alt="" width="18" height="32">ICON<small>STUDIO</small></a>
+    <nav aria-label="Main">
+      <a href="../" class="opt">Home</a>
+      <a href="../#works" class="opt">Works</a>
+      <a href="./" aria-current="page">Explorations</a>
+      <a href="../#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow">Explorations</p>
+    <h1 class="display">Notes from<br><em>the studio.</em></h1>
+    <p class="lede">Research, experiments and case studies from ICON Studio and Dr. Ashraf Ahmed, across cinema, animation, sound and creative AI. Read them, share them, and tell us what you think.</p>
+    <div class="filters" id="filters" aria-label="Filter by topic"></div>
+  </section>
+  <section class="grid" id="grid" aria-live="polite"></section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>&copy; <span id="y">2026</span> ICON Studio. Est. 1998.</span>
+    <a href="../">www.iconstudio.tech</a>
+  </div>
+</footer>
+<script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+<script src="explore.js"></script>
+</body>
+</html>
